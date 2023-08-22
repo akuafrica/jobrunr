@@ -6,14 +6,14 @@ plugins {
 }
 
 nexusPublishing {
-    packageGroup = "org.jobrunr"
+    packageGroup = "org.akufintech"
     repositories {
         sonatype()
     }
 }
 
 subprojects {
-    group = 'org.jobrunr'
+    group = 'org.akufintech'
     version = System.getenv('DRONE_TAG')?.replace("v", "") ?: "v1.0.0-SNAPSHOT".replace("v", "")
 }
 

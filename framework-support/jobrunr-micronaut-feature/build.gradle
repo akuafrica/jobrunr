@@ -43,7 +43,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Automatic-Module-Name': 'org.jobrunr.micronaut'
+        attributes 'Automatic-Module-Name': 'org.akufintech.micronaut'
         attributes 'Built-By': 'build.jobrunr.io'
         attributes 'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date())
         attributes 'Build-Version': project.version
@@ -58,7 +58,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'org.jobrunr'
+            groupId = 'org.akufintech'
             artifactId = 'jobrunr-micronaut-feature'
             version = project.version
             from components.java

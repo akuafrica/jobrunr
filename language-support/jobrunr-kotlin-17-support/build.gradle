@@ -40,7 +40,7 @@ compileTestKotlin {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'org.jobrunr'
+            groupId = 'org.akufintech'
             artifactId = 'jobrunr-kotlin-1.7-support'
             version = project.version
             from components.java

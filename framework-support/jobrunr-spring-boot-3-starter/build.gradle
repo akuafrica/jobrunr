@@ -56,7 +56,7 @@ java {
 jar {
     archiveClassifier = ''
     manifest {
-        attributes 'Automatic-Module-Name': 'org.jobrunr.spring.boot-3.starter'
+        attributes 'Automatic-Module-Name': 'org.akufintech.spring.boot-3.starter'
         attributes 'Built-By': 'build.jobrunr.io'
         attributes 'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date())
         attributes 'Build-Version': project.version
@@ -71,7 +71,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'org.jobrunr'
+            groupId = 'org.akufintech'
             artifactId = 'jobrunr-spring-boot-3-starter'
             version = project.version
             from components.java
