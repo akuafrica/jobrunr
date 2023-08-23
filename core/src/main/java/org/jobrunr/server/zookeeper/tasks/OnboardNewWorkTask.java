@@ -9,6 +9,7 @@ import org.jobrunr.storage.PageRequest;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class OnboardNewWorkTask extends ZooKeeperTask {
 
@@ -28,8 +29,9 @@ public class OnboardNewWorkTask extends ZooKeeperTask {
                 LOGGER.trace("Looking for enqueued jobs... ");
                 final PageRequest workPageRequest = workDistributionStrategy.getWorkPageRequest();
                 if (workPageRequest.getLimit() > 0) {
-                    final List<Job> enqueuedJobs = storageProvider.getJobs(StateName.ENQUEUED, workPageRequest);
-                    enqueuedJobs.forEach(backgroundJobServer::processJob);
+                    final List<Job> enqueuedJobs = storageProvider.getJobs(StateName.ENQUEUED, workPageRequest)
+                            .stream().filter(j -> j.getLabels().contains(backgroundJobServer.getConfiguration().getName()))
+                            .collect(Collectors.toList());
                     LOGGER.debug("Found {} enqueued jobs to process.", enqueuedJobs.size());
                 }
             }

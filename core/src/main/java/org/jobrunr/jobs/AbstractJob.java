@@ -103,5 +103,4 @@ public abstract class AbstractJob implements Lockable {
     public Lock lock() {
         return locker.lock();
     }
-
 }

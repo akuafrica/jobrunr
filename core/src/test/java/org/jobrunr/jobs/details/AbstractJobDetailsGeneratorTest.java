@@ -1,6 +1,5 @@
 package org.jobrunr.jobs.details;
 
-import io.github.artsok.RepeatedIfExceptionsTest;
 import org.assertj.core.api.Assertions;
 import org.jobrunr.JobRunrException;
 import org.jobrunr.jobs.JobDetails;
@@ -30,7 +29,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
@@ -42,6 +40,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.awaitility.Awaitility.await;
 import static org.jobrunr.JobRunrAssertions.assertThat;
 import static org.jobrunr.jobs.details.JobDetailsGeneratorUtils.toFQResource;
 import static org.jobrunr.stubs.TestService.Task.PROGRAMMING;
@@ -1057,7 +1056,7 @@ public abstract class AbstractJobDetailsGeneratorTest {
                 .hasArgs(uuid2);
     }
 
-    @RepeatedIfExceptionsTest(repeats = 3)
+    @Test
     @Because("https://github.com/jobrunr/jobrunr/issues/456")
     void createJobDetailsInMultipleThreads() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(4);
@@ -1072,8 +1071,7 @@ public abstract class AbstractJobDetailsGeneratorTest {
         thread3.start();
         thread4.start();
 
-        countDownLatch.await(250, TimeUnit.SECONDS);
-        assertThat(jobDetailsResults).hasSize(2000);
+        await().untilAsserted(() -> assertThat(jobDetailsResults).hasSize(2000));
         jobDetailsResults.keySet().stream()
                 .forEach(key -> {
                     Integer givenInput = parseInt(substringAfterLast(key, "-"));

@@ -16,9 +16,14 @@ public class UnresolvableConcurrentJobModificationException extends ConcurrentJo
 
     private final List<ConcurrentJobModificationResolveResult> concurrentJobModificationResolveResults;
 
-    public UnresolvableConcurrentJobModificationException(List<ConcurrentJobModificationResolveResult> concurrentJobModificationResolveResults) {
-        super(concurrentJobModificationResolveResults.stream().map(ConcurrentJobModificationResolveResult::getLocalJob).collect(toList()));
+    public UnresolvableConcurrentJobModificationException(List<ConcurrentJobModificationResolveResult> concurrentJobModificationResolveResults, Exception cause) {
+        super(concurrentJobModificationResolveResults.stream().map(ConcurrentJobModificationResolveResult::getLocalJob).collect(toList()), cause);
         this.concurrentJobModificationResolveResults = concurrentJobModificationResolveResults;
+    }
+
+    @Override
+    public String getMessage() {
+        return super.getMessage() + "\n\n" + getDiagnosticsInfo().asMarkDown();
     }
 
     @Override
@@ -34,6 +39,8 @@ public class UnresolvableConcurrentJobModificationException extends ConcurrentJo
 
         diagnostics
                 .withLine("Job id: " + localJob.getId())
+                .withIndentedLine("Job Name: " + localJob.getJobName())
+                .withIndentedLine("Job Signature: " + localJob.getJobSignature())
                 .withIndentedLine("Local version: " + localJob.getVersion() + "; Storage version: " + jobFromStorage.getVersion())
                 .withIndentedLine("Local state: " + getJobStates(localJob))
                 .withIndentedLine("Storage state: " + getJobStates(jobFromStorage));
