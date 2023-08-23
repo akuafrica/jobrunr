@@ -118,5 +118,4 @@ class JobPerformingFiltersTest {
             throw new RuntimeException("boem!");
         }
     }
-
 }

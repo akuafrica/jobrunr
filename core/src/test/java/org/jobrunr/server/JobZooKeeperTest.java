@@ -118,6 +118,21 @@ class JobZooKeeperTest {
     }
 
     @Test
+    void ifNoStateChangeHappensStateChangeFiltersAreNotInvoked() {
+        Job aJobInProgress = aJobInProgress().build();
+
+        jobZooKeeper.startProcessing(aJobInProgress, mock(Thread.class));
+
+        for (int i = 0; i <= 5; i++) {
+            jobZooKeeper.run();
+        }
+
+        assertThat(logAllStateChangesFilter.stateChanges).isEmpty();
+        assertThat(logAllStateChangesFilter.onProcessingIsCalled).isFalse();
+        assertThat(logAllStateChangesFilter.onProcessingSucceededIsCalled).isFalse();
+    }
+
+    @Test
     void severeJobRunrExceptionsAreLoggedToStorageProvider() {
         Job succeededJob1 = aSucceededJob().build();
         Job succeededJob2 = aSucceededJob().build();

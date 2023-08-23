@@ -1,5 +1,5 @@
 plugins {
-    id 'com.google.cloud.tools.jib' version '3.3.1'
+    id 'com.google.cloud.tools.jib' version '3.3.2'
 }
 
 compileJava {
@@ -19,6 +19,8 @@ dependencies {
 }
 
 test.dependsOn(jibDockerBuild)
+test.outputs.cacheIf { false }
+
 jib {
     from {
         image = "gcr.io/distroless/java:11"

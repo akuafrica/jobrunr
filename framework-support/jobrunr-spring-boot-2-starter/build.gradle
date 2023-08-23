@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'com.github.ben-manes.versions' version '0.46.0'
+    id 'com.github.ben-manes.versions' version '0.47.0'
     id 'java-library'
     id 'maven-publish'
     id 'signing'
@@ -9,8 +9,8 @@ plugins {
 
 dependencies {
     api platform(project(':platform'))
-    api platform('org.springframework.boot:spring-boot-dependencies:2.7.12')
-    annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:2.7.12')
+    api platform('org.springframework.boot:spring-boot-dependencies:2.7.14')
+    annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:2.7.14')
     api project(':core')
 
     api 'org.springframework.boot:spring-boot-starter'
@@ -49,6 +49,13 @@ tasks.named("dependencyUpdates").configure {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+normalization {
+    runtimeClasspath {
+        ignore '**/MANIFEST.MF'
+        ignore '**/frontend/**'
+    }
 }
 
 jar {

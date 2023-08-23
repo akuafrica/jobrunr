@@ -15,7 +15,7 @@ class UnresolvableConcurrentJobModificationExceptionTest {
         final Job jobFromStorage = aFailedJob().build();
 
         final ConcurrentJobModificationResolveResult resolveResult = ConcurrentJobModificationResolveResult.failed(localJob, jobFromStorage);
-        final UnresolvableConcurrentJobModificationException unresolvableConcurrentJobModificationException = new UnresolvableConcurrentJobModificationException(singletonList(resolveResult));
+        final UnresolvableConcurrentJobModificationException unresolvableConcurrentJobModificationException = new UnresolvableConcurrentJobModificationException(singletonList(resolveResult), new Exception());
 
         final String markDown = unresolvableConcurrentJobModificationException.getDiagnosticsInfo().asMarkDown();
         assertThat(markDown)
@@ -29,7 +29,7 @@ class UnresolvableConcurrentJobModificationExceptionTest {
         final Job jobFromStorage = aFailedJob().build();
 
         final ConcurrentJobModificationResolveResult resolveResult = ConcurrentJobModificationResolveResult.failed(localJob, jobFromStorage);
-        final UnresolvableConcurrentJobModificationException unresolvableConcurrentJobModificationException = new UnresolvableConcurrentJobModificationException(singletonList(resolveResult));
+        final UnresolvableConcurrentJobModificationException unresolvableConcurrentJobModificationException = new UnresolvableConcurrentJobModificationException(singletonList(resolveResult), new Exception());
 
         final String markDown = unresolvableConcurrentJobModificationException.getDiagnosticsInfo().asMarkDown();
         assertThat(markDown)
@@ -37,4 +37,18 @@ class UnresolvableConcurrentJobModificationExceptionTest {
                 .containsPattern("FAILED (.*) ← PROCESSING (.*) ← ENQUEUED");
     }
 
+    @Test
+    void logsAllInfoAlsoToConsole() {
+        final Job localJob = anEnqueuedJob().build();
+        final Job jobFromStorage = aFailedJob().build();
+
+        final ConcurrentJobModificationResolveResult resolveResult = ConcurrentJobModificationResolveResult.failed(localJob, jobFromStorage);
+        final UnresolvableConcurrentJobModificationException unresolvableConcurrentJobModificationException = new UnresolvableConcurrentJobModificationException(singletonList(resolveResult), new Exception());
+
+        assertThat(unresolvableConcurrentJobModificationException)
+                .hasMessageContaining("Job Name: an enqueued job")
+                .hasMessageContaining("Job Signature: java.lang.System.out.println(java.lang.String)")
+                .hasMessageContaining("Local state: ENQUEUED")
+                .hasMessageContaining("Storage state: FAILED");
+    }
 }
